@@ -1,0 +1,43 @@
+#集群名称
+cluster.name: es-docker-cluster
+#当前该节点的名称
+node.name: es-master
+#是不是有资格竞选主节点
+node.master: true
+#是否存储数据
+node.data: true
+#最大集群节点数
+node.max_local_storage_nodes: 3
+#给当前节点自定义属性（可以省略）
+#node.attr.rack: r1
+#数据存档位置
+path.data: /usr/share/elasticsearch/data
+#日志存放位置
+path.logs: /usr/share/elasticsearch/log
+#是否开启时锁定内存（默认为是）
+bootstrap.memory_lock: true
+search.max_buckets: 100000000
+#设置网关地址
+network.host: 0.0.0.0
+#设置映射端口
+http.port: 9200
+#内部节点之间沟通端口
+transport.tcp.port: 9300
+#es7.x 之后新增的配置，写入候选主节点的设备地址，在开启服务后可以被选为主节点，也就是说把所有的节点都写上
+discovery.seed_hosts: ["es-node1","es-node2"]
+#当你在搭建集群的时候，选出合格的节点集群
+cluster.initial_master_nodes: ["es-master","es-node1","es-node2"]
+#在群集完全重新启动后阻止初始恢复，直到启动N个节点
+#简单点说在集群启动后，至少复活多少个节点以上，那么这个服务才可以被使用，否则不可以被使用，
+gateway.recover_after_nodes: 2
+#删除索引是是否需要显示其名称，默认为显示
+action.destructive_requires_name: true
+
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+action.auto_create_index: .security,.monitoring*,.watches,.triggered_watches,.watcher-history*
+xpack.security.enabled: false
+xpack.monitoring.enabled: true
+xpack.graph.enabled: false
+xpack.watcher.enabled: false
+xpack.ml.enabled: false

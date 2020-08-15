@@ -1,0 +1,73 @@
+version: '3.8'
+services:
+  es-master:
+    image: lqy/elasticsearch:v1
+    container_name: es-master
+    environment:
+      - TZ="Asia/Shanghai"
+      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./es01/data:/usr/share/elasticsearch/data:rw
+      - ./es01/conf/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./es01/logs:/usr/share/elasticsearch/logs:rw
+    ports:
+      - 9200:9200
+      - 9300:9300
+  es-node1:
+    image: lqy/elasticsearch:v1
+    container_name: es-node1
+    environment:
+      - TZ="Asia/Shanghai"
+      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./es02/data:/usr/share/elasticsearch/data:rw
+      - ./es02/conf/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./es02/logs:/usr/share/elasticsearch/logs:rw
+    ports:
+      - 9201:9200
+      - 9301:9300
+  es-node2:
+    image: lqy/elasticsearch:v1
+    container_name: es-node2
+    environment:
+      - TZ="Asia/Shanghai"
+      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./es03/data:/usr/share/elasticsearch/data:rw
+      - ./es03/conf/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./es03/logs:/usr/share/elasticsearch/logs:rw
+    ports:
+      - 9202:9200
+      - 9302:9300
+  kibana:
+    image: kibana:7.8.1
+    container_name: kibana
+    restart: always
+    environment:
+      - TZ="Asia/Shanghai"
+    ports:
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_URL: http://es-master:9200
+      ELASTICSEARCH_HOSTS: http://es-master:9200
+  eshead:
+    image: mobz/elasticsearch-head:5
+    container_name: eshead
+    ports:
+      - 9100:9100
+networks:
+  default:
+    external:
+      name: lqy-network
